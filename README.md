@@ -1,4 +1,5 @@
 login do konsoli: sa
+
 hasło: 1234
 
 Możecie tutaj napisać sugestie, opinie, rzeczy do zrobienia...
