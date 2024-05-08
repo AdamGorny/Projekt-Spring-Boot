@@ -34,4 +34,24 @@ public class Controller {
         butRepository.save(new But(marka, nazwaModelu, rozmiar, cena));
         return "redirect:";
     }
+
+    @PostMapping("/edytujBut")
+    public String edytujBut(@RequestParam Integer id, Model model) {
+        But but = butRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Nieprawidłowe ID buta"));
+        model.addAttribute("but", but);
+        return "edycjaButa";
+    }
+
+    @PostMapping("/zapiszEdycjeButa")
+    public String zapiszEdycjeButa(@RequestParam Integer id, @RequestParam String marka,
+                                   @RequestParam String nazwaModelu, @RequestParam double rozmiar,
+                                   @RequestParam double cena) {
+        But but = butRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Nieprawidłowe ID buta"));
+        but.setMarka(marka);
+        but.setNazwaModelu(nazwaModelu);
+        but.setRozmiar(rozmiar);
+        but.setCena(cena);
+        butRepository.save(but);
+        return "redirect:";
+    }
 }

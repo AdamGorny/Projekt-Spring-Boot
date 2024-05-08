@@ -42,11 +42,14 @@
             <form th:action="@{/usunBut(id=${but.id})}" method="post">
                 <button type="submit">Usuń</button>
             </form>
+            <form th:action="@{/edytujBut(id=${but.id})}" method="post">
+                <button type="submit">Edytuj</button>
+            </form>
         </td>
     </tr>
     </tbody>
 </table>
-<h2>Dodaj Buta</h2>
+<h2>Dodaj But</h2>
 <form th:action="@{/dodajBut}" method="post">
     <label for="marka">Marka:</label>
     <input type="text" id="marka" name="marka"><br>
