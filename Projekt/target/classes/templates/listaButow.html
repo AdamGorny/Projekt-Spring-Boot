@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista Butów</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+<h2>Lista Butów</h2>
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Marka</th>
+        <th>Model</th>
+        <th>Rozmiar</th>
+        <th>Cena [zł]</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="but : ${listaButow}">
+        <td th:text="${but.id}"></td>
+        <td th:text="${but.marka}"></td>
+        <td th:text="${but.nazwaModelu}"></td>
+        <td th:text="${but.rozmiar}"></td>
+        <td th:text="${but.cena}"></td>
+        <td>
+            <form th:action="@{/usunBut(id=${but.id})}" method="post">
+                <button type="submit">Usuń</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<h2>Dodaj Buta</h2>
+<form th:action="@{/dodajBut}" method="post">
+    <label for="marka">Marka:</label>
+    <input type="text" id="marka" name="marka"><br>
+    <label for="nazwaModelu">Model:</label>
+    <input type="text" id="nazwaModelu" name="nazwaModelu"><br>
+    <label for="rozmiar">Rozmiar:</label>
+    <input type="number" id="rozmiar" name="rozmiar"><br>
+    <label for="cena">Cena:</label>
+    <input type="number" id="cena" name="cena"><br>
+    <button type="submit">Dodaj</button>
+</form>
+</body>
+</html>
