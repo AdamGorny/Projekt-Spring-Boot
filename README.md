@@ -8,11 +8,12 @@ DO ZROBIENIA (na razie):
   - dodanie listy zakupionych butów do klienta (ewentualnie inne, dodatkowe atrybuty)
   - dodanie zapytań do bazy danych
   - mozna dodac system logowania/rejestracji z baza uzytkownikow i mozliwosc edycji/dodawania/usuwania dac tylko administratorowi a klientom mozliwosc wybierania produktow i zlozenia zamowienia (wtedy tez baza zamowien powiazana z klientami)
-  - dodac opcje sortowania i filtrowania listy
+  - teoretycznie filtrowanie, ale nie wiem czy to jest potrzebne jeśli wyszukiwanie działa na wszystkie pola
 
 Adam:
   - dodalem wyswietlanie listy butów z edycją dodawaniem i usuwaniem
   - uzywalem thymeleaf do polaczenia z backendem, lepiej by pasowalo php ale imo bez sensu jak uzywamy springa pisac zapytania do bazy w php
+  - wyszukiwanie + sortowanie
 
 **Jak połączyć github z intellij:**
 1. kliknac na nazwe obecnie otwartego pliku lub bezposrednio z menu glownego -> get from version control (VSC)
