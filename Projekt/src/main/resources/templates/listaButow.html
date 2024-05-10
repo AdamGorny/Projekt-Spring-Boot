@@ -16,19 +16,32 @@
         }
         th {
             background-color: #f2f2f2;
+            cursor: pointer;
+            position: relative;
+        }
+        .sort-icon {
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
         }
     </style>
 </head>
 <body>
 <h2>Lista Butów</h2>
-<table>
+
+<label for="search"></label>
+<input type="text" id="search" placeholder="Wyszukaj but...">
+
+<table id="table">
     <thead>
     <tr>
-        <th>ID</th>
-        <th>Marka</th>
-        <th>Model</th>
-        <th>Rozmiar</th>
-        <th>Cena [zł]</th>
+        <th onclick="sortTable(0)">ID <span class="sort-icon" id="sort-icon-id">&#x25B2;&#x25BC;</span></th>
+        <th onclick="sortTable(1)">Marka <span class="sort-icon" id="sort-icon-marka">&#x25B2;&#x25BC;</span></th>
+        <th onclick="sortTable(2)">Model <span class="sort-icon" id="sort-icon-model">&#x25B2;&#x25BC;</span></th>
+        <th onclick="sortTable(3)">Rozmiar <span class="sort-icon" id="sort-icon-rozmiar">&#x25B2;&#x25BC;</span></th>
+        <th onclick="sortTable(4)">Cena [zł] <span class="sort-icon" id="sort-icon-cena">&#x25B2;&#x25BC;</span></th>
+        <th>Akcje</th>
     </tr>
     </thead>
     <tbody>
@@ -61,5 +74,100 @@
     <input type="number" id="cena" name="cena"><br>
     <button type="submit">Dodaj</button>
 </form>
+
+<!-- WYSZUKIWANIE -->
+<script>
+    document.getElementById("search").addEventListener("input", function() {
+        const searchText = this.value.toLowerCase();
+        const rows = document.querySelectorAll("#table tbody tr");
+
+        rows.forEach(function(row) {
+            const text = row.textContent.toLowerCase();
+            if (text.includes(searchText)) {
+                row.style.display = "";
+            } else {
+                row.style.display = "none";
+            }
+        });
+    });
+</script>
+
+<!-- SORTOWANIE TABLELI I STRZAŁKI KIERUNKU SORTOWANIA -->
+<script>
+    const sortDirections = [1, 1, 1, 1, 1];
+
+    function sortTable(columnIndex) {
+        let table, rows, switching, i, x, y, shouldSwitch;
+        table = document.getElementById("table");
+        switching = true;
+        while (switching) {
+            switching = false;
+            rows = table.rows;
+            for (i = 1; i < (rows.length - 1); i++) {
+                shouldSwitch = false;
+                x = rows[i].getElementsByTagName("td")[columnIndex];
+                y = rows[i + 1].getElementsByTagName("td")[columnIndex];
+                if (sortDirections[columnIndex] === 1) {
+                    if (isNaN(parseFloat(x.innerHTML))) {
+                        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                            shouldSwitch = true;
+                            break;
+                        }
+                    } else {
+                        if (parseFloat(x.innerHTML) > parseFloat(y.innerHTML)) {
+                            shouldSwitch = true;
+                            break;
+                        }
+                    }
+                } else {
+                    if (isNaN(parseFloat(x.innerHTML))) {
+                        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                            shouldSwitch = true;
+                            break;
+                        }
+                    } else {
+                        if (parseFloat(x.innerHTML) < parseFloat(y.innerHTML)) {
+                            shouldSwitch = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            if (shouldSwitch) {
+                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                switching = true;
+            }
+        }
+
+        sortDirections[columnIndex] *= -1;
+        updateSortIcon(columnIndex);
+    }
+
+    function updateSortIcon(columnIndex) {
+        const icons = document.querySelectorAll('.sort-icon');
+        icons.forEach(function(icon) {
+            icon.innerHTML = '&#x25B2;&#x25BC;';
+        });
+
+        const iconId = 'sort-icon-' + getColumnId(columnIndex);
+        const currentIcon = document.getElementById(iconId);
+        if (sortDirections[columnIndex] === -1) {
+            currentIcon.innerHTML = '&#x25B2;';
+        } else {
+            currentIcon.innerHTML = '&#x25BC;';
+        }
+    }
+
+    function getColumnId(columnIndex) {
+        switch (columnIndex) {
+            case 0: return 'id';
+            case 1: return 'marka';
+            case 2: return 'model';
+            case 3: return 'rozmiar';
+            case 4: return 'cena';
+            default: return '';
+        }
+    }
+</script>
 </body>
 </html>
