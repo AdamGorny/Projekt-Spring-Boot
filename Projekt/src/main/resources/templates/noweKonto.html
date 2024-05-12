@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decoration="_layout">
+<head>
+    <meta charset="UTF-8">
+    <title>Nowe konto</title>
+</head>
+<body>
+<h1>Podaj swoje dane</h1>
+<form th:action="@{/tworzenieKonta}" method="post">
+    <label for="imie">Imię:</label>
+    <input type="text" id="imie" name="imie"><br>
+    <label for="nazwisko">Nazwisko:</label>
+    <input type="text" id="nazwisko" name="nazwisko"><br>
+    <label for="email">Adres e-mail:</label>
+    <input type="text" id="email" name="email"><br>
+    <label for="haslo">Hasło:</label>
+    <input type="text" id="haslo" name="haslo"><br>
+    <button type="submit">Utwórz konto</button>
+</form>
+</body>
+</html>
