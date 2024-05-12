@@ -18,11 +18,11 @@ public class DataLoader implements CommandLineRunner {
     }
 
     public void run(String... args) throws Exception {
-        Klient klient1 = new Klient("Jan", "Kowalski", "jan.kowalski@gmail.com");
+        Klient klient1 = new Klient("Jan", "Kowalski", "jan.kowalski@gmail.com","jk123");
         klientRepository.save(klient1);
-        Klient klient2 = new Klient("Robert", "Lewandowski", "robert.lewandowski@gmail.com");
+        Klient klient2 = new Klient("Robert", "Lewandowski", "robert.lewandowski@gmail.com","rl9");
         klientRepository.save(klient2);
-        Klient klient3 = new Klient("Kamil", "Stoch", "kamil.stoch@gmail.com");
+        Klient klient3 = new Klient("Kamil", "Stoch", "kamil.stoch@gmail.com","skoki1234");
         klientRepository.save(klient3);
 
         But but1 = new But("Nike", "Air Force 1", 45, 700);

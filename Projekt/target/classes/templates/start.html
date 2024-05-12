@@ -4,9 +4,20 @@
     layout:decoration="_layout">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Zaloguj się</title>
+    <h1>Witaj!</h1>
+    <h3>Zaloguj się lub utwórz konto</h3>
 </head>
 <body>
-<h3>Tekst z start</h3>
+<form th:action="@{/logowanie}" method="post">
+    <label for="email">Adres e-mail:</label>
+    <input type="text" id="email" name="email"><br>
+    <label for="haslo">Hasło:</label>
+    <input type="password" id="haslo" name="haslo"><br>
+    <button type="submit">Zaloguj</button>
+</form>
+<a th:href="@{/utworzKonto}">
+    <button>Utwórz nowe konto</button>
+</a>
 </body>
 </html>

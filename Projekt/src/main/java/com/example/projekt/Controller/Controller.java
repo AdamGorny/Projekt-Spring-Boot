@@ -1,7 +1,9 @@
 package com.example.projekt.Controller;
 
 import com.example.projekt.Model.But;
+import com.example.projekt.Model.Klient;
 import com.example.projekt.Repository.ButRepository;
+import com.example.projekt.Repository.KlientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +16,8 @@ import java.util.List;
 public class Controller {
     @Autowired
     private ButRepository butRepository;
+    @Autowired
+    private KlientRepository klientRepository;
 
     @GetMapping
     public String zwrocButy(Model model) {
@@ -53,5 +57,34 @@ public class Controller {
         but.setCena(cena);
         butRepository.save(but);
         return "redirect:";
+    }
+
+    @GetMapping("/login")
+    public String loginPage(){
+        return "start";
+    }
+    @PostMapping("/logowanie")
+    public String logowanie(@RequestParam String email, @RequestParam String haslo, Model model){
+        Klient klient = klientRepository.findByEmail(email);
+        if (klient == null)
+            throw(new IllegalArgumentException("Nieprawidłowy email"));
+
+        else if (klient.getHaslo().equals(haslo)) {
+            model.addAttribute("zalogowanyKlient", klient);
+            return "stronaKlienta";
+        }
+        else
+            throw(new IllegalArgumentException("Nieprawidłowe hasło"));
+    }
+    @GetMapping("/utworzKonto")
+    public String utworzKonto(){
+        return "noweKonto";
+    }
+    @PostMapping("/tworzenieKonta")
+    public String tworzenieKonta(@RequestParam String imie, @RequestParam String nazwisko,
+                                 @RequestParam String email, @RequestParam String haslo){
+        Klient klient = new Klient(imie,nazwisko,email,haslo);
+        klientRepository.save(klient);
+        return "start";
     }
 }
