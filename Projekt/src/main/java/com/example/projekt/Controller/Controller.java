@@ -19,12 +19,12 @@ public class Controller {
     @Autowired
     private KlientRepository klientRepository;
 
-    @GetMapping
-    public String zwrocButy(Model model) {
-        List<But> butyLista = butRepository.findAll();
-        model.addAttribute("listaButow", butyLista);
-        return "listaButow";
-    }
+    //@GetMapping
+    //public String zwrocButy(Model model) {
+      //  List<But> butyLista = butRepository.findAll();
+      //  model.addAttribute("listaButow", butyLista);
+      //  return "listaButow";
+    //}
 
     @PostMapping("/usunBut")
     public String usunBut(@RequestParam Integer id) {
@@ -59,22 +59,28 @@ public class Controller {
         return "redirect:";
     }
 
-    @GetMapping("/login")
+    @GetMapping
     public String loginPage(){
         return "start";
     }
     @PostMapping("/logowanie")
     public String logowanie(@RequestParam String email, @RequestParam String haslo, Model model){
-        Klient klient = klientRepository.findByEmail(email);
-        if (klient == null)
-            throw(new IllegalArgumentException("Nieprawidłowy email"));
-
-        else if (klient.getHaslo().equals(haslo)) {
-            model.addAttribute("zalogowanyKlient", klient);
-            return "stronaKlienta";
+        if (email.equals("Admin") && haslo.equals("admin123")){
+              List<But> butyLista = butRepository.findAll();
+              model.addAttribute("listaButow", butyLista);
+              return "listaButow";
         }
-        else
-            throw(new IllegalArgumentException("Nieprawidłowe hasło"));
+        else {
+            Klient klient = klientRepository.findByEmail(email);
+            if (klient == null)
+                throw (new IllegalArgumentException("Nieprawidłowy email"));
+
+            else if (klient.getHaslo().equals(haslo)) {
+                model.addAttribute("zalogowanyKlient", klient);
+                return "stronaKlienta";
+            } else
+                throw (new IllegalArgumentException("Nieprawidłowe hasło"));
+        }
     }
     @GetMapping("/utworzKonto")
     public String utworzKonto(){
