@@ -6,6 +6,9 @@
 </head>
 <body>
 <h1>Zalogowano</h1>
-<p th:text="${zalogowanyKlient.imie} + ' ' + ${zalogowanyKlient.nazwisko}">
+<p th:text="${zalogowanyKlient.imie} + ' ' + ${zalogowanyKlient.nazwisko}"></p>
+<a th:href="@{/baza}">
+    <button>Wejdz do bazy danych</button>
+</a>
 </body>
 </html>

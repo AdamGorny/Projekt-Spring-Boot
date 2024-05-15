@@ -19,12 +19,12 @@ public class Controller {
     @Autowired
     private KlientRepository klientRepository;
 
-    //@GetMapping
-    //public String zwrocButy(Model model) {
-      //  List<But> butyLista = butRepository.findAll();
-      //  model.addAttribute("listaButow", butyLista);
-      //  return "listaButow";
-    //}
+    @GetMapping("/baza")
+    public String zwrocButy(Model model) {
+      List<But> butyLista = butRepository.findAll();
+      model.addAttribute("listaButow", butyLista);
+      return "listaButow";
+    }
 
     @PostMapping("/usunBut")
     public String usunBut(@RequestParam Integer id) {
