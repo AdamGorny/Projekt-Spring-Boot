@@ -2,8 +2,10 @@ package com.example.projekt.Controller;
 
 import com.example.projekt.Model.But;
 import com.example.projekt.Model.Klient;
+import com.example.projekt.Model.Zamowienie;
 import com.example.projekt.Repository.ButRepository;
 import com.example.projekt.Repository.KlientRepository;
+import com.example.projekt.Repository.ZamowienieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +20,8 @@ public class Controller {
     private ButRepository butRepository;
     @Autowired
     private KlientRepository klientRepository;
+    @Autowired
+    private ZamowienieRepository zamowienieRepository;
 
     @GetMapping("/baza")
     public String zwrocButy(Model model) {
@@ -77,6 +81,8 @@ public class Controller {
 
             else if (klient.getHaslo().equals(haslo)) {
                 model.addAttribute("zalogowanyKlient", klient);
+                List<Zamowienie> zamowienia = zamowienieRepository.ZnajdzPoKliencie(klient.getId());
+                model.addAttribute("zamowienia", zamowienia);
                 return "stronaKlienta";
             } else
                 throw (new IllegalArgumentException("Nieprawidłowe hasło"));
@@ -93,4 +99,5 @@ public class Controller {
         klientRepository.save(klient);
         return "start";
     }
+
 }
