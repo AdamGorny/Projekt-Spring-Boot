@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 
@@ -32,15 +33,16 @@ public class Controller {
 
     @PostMapping("/usunBut")
     public String usunBut(@RequestParam Integer id) {
+        zamowienieRepository.UsunPoId(id);
         butRepository.deleteById(id);
-        return "redirect:";
+        return "redirect:/baza";
     }
 
     @PostMapping("/dodajBut")
     public String dodajBut(@RequestParam String marka, @RequestParam String nazwaModelu,
-                           @RequestParam double rozmiar, @RequestParam double cena) {
-        butRepository.save(new But(marka, nazwaModelu, rozmiar, cena));
-        return "redirect:";
+                           @RequestParam double cena) {
+        butRepository.save(new But(marka, nazwaModelu, cena));
+        return "redirect:/baza";
     }
 
     @PostMapping("/edytujBut")
@@ -52,15 +54,13 @@ public class Controller {
 
     @PostMapping("/zapiszEdycjeButa")
     public String zapiszEdycjeButa(@RequestParam Integer id, @RequestParam String marka,
-                                   @RequestParam String nazwaModelu, @RequestParam double rozmiar,
-                                   @RequestParam double cena) {
+                                   @RequestParam String nazwaModelu, @RequestParam double cena) {
         But but = butRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Nieprawidłowe ID buta"));
         but.setMarka(marka);
         but.setNazwaModelu(nazwaModelu);
-        but.setRozmiar(rozmiar);
         but.setCena(cena);
         butRepository.save(but);
-        return "redirect:";
+        return "redirect:/baza";
     }
 
     @GetMapping
@@ -69,9 +69,9 @@ public class Controller {
     }
     @PostMapping("/logowanie")
     public String logowanie(@RequestParam String email, @RequestParam String haslo, Model model){
+        List<But> butyLista = butRepository.findAll();
+        model.addAttribute("listaButow", butyLista);
         if (email.equals("Admin") && haslo.equals("admin123")){
-              List<But> butyLista = butRepository.findAll();
-              model.addAttribute("listaButow", butyLista);
               return "listaButow";
         }
         else {
@@ -98,6 +98,19 @@ public class Controller {
         Klient klient = new Klient(imie,nazwisko,email,haslo);
         klientRepository.save(klient);
         return "start";
+    }
+    // Ta funkcja wylogowywuje użytkownika, ale nie wiem jak to zrobić inaczej (sory!)-- Maciek
+    @PostMapping("/dodajZamowienie")
+    public String dodajZamowienie(@RequestParam int klient_id,@RequestParam int but_id, @RequestParam int rozmiar){
+        Klient klient = klientRepository.findById(klient_id);
+        But but = butRepository.findById(but_id);
+        Zamowienie zam = new Zamowienie(klient, but, rozmiar);
+        zamowienieRepository.save(zam);
+        return "redirect:";
+    }
+    @GetMapping("/wyloguj")
+    public String wyloguj(){
+        return "redirect:";
     }
 
 }

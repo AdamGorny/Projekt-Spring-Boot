@@ -22,11 +22,11 @@ public class DataLoader implements CommandLineRunner {
     }
 
     public void run(String... args) throws Exception {
-        But but1 = new But("Nike", "Air Force 1", 45, 700);
+        But but1 = new But("Nike", "Air Force 1", 700);
         butRepository.save(but1);
-        But but2 = new But("Nike", "Air Jordan 4", 42, 1000);
+        But but2 = new But("Nike", "Air Jordan 4", 1000);
         butRepository.save(but2);
-        But but3 = new But("Adidas", "Ultraboost 1.0", 40, 500);
+        But but3 = new But("Adidas", "Ultraboost 1.0", 500);
         butRepository.save(but3);
 
         Klient klient1 = new Klient("Jan", "Kowalski", "jan.kowalski@gmail.com","jk123");
