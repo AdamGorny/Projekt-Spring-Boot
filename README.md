@@ -3,7 +3,8 @@
   - dodawanie zamówienia (na stronie klienta) wylogowywuje go (przydałoby się zaktualizować listę zamówień bez odświeżania strony, ale nie wiem jak to zrobić)
   - (OPCJONALNIE) dodać więcej rekordów do bazy użytkowników, butów, zamówień (jeśli ktoś z Was się nudzi)
 
-Poza tym wszystko wygląda super, dobra robota!
+Poza tym wszystko jest ok, dobra robota!
+
 --------------------------------------
 
 login do konsoli: sa
