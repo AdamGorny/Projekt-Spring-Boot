@@ -18,13 +18,12 @@ public class But {
     private int id;
     private String marka;
     private String nazwaModelu;
-    private double rozmiar;
+    //private double rozmiar;
     private double cena;
 
-    public But(String marka, String nazwaModelu, double rozmiar, double cena) {
+    public But(String marka, String nazwaModelu, double cena) {
         this.marka = marka;
         this.nazwaModelu = nazwaModelu;
-        this.rozmiar = rozmiar;
         this.cena = cena;
     }
 }

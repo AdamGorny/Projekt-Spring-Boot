@@ -3,12 +3,51 @@
     xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
     layout:decoration="_layout">
 <head>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+            cursor: pointer;
+            position: relative;
+        }
+        .sort-icon {
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+    </style>
 </head>
 <body>
 <h1>Zalogowano</h1>
-<p th:text="${zalogowanyKlient.imie} + ' ' + ${zalogowanyKlient.nazwisko}"></p>
+<p th:text="'Witaj ' + ${zalogowanyKlient.imie} + ' ' + ${zalogowanyKlient.nazwisko}"></p>
 <a th:href="@{/baza}">
     <button>Wejdz do bazy danych</button>
 </a>
+<h2>Twoje zamówienia</h2>
+<table id="tableZam">
+    <thead>
+    <tr>
+        <th onclick="sortTable(0)">Marka <span class="sort-icon" id="sort-icon-markaBut">&#x25B2;&#x25BC;</span></th>
+        <th onclick="sortTable(1)">Model <span class="sort-icon" id="sort-icon-modelBut">&#x25B2;&#x25BC;</span></th>
+        <th onclick="sortTable(2)">Rozmiar <span class="sort-icon" id="sort-icon-rozmiarBut">&#x25B2;&#x25BC;</span></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="zam : ${zamowienia}">
+        <td th:text="${zam.but.marka}"></td>
+        <td th:text="${zam.but.nazwaModelu}"></td>
+        <td th:text="${zam.rozmiar}"></td>
+    </tr>
+    </tbody>
+</table>
 </body>
 </html>

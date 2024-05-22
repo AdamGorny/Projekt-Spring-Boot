@@ -39,8 +39,7 @@
         <th onclick="sortTable(0)">ID <span class="sort-icon" id="sort-icon-id">&#x25B2;&#x25BC;</span></th>
         <th onclick="sortTable(1)">Marka <span class="sort-icon" id="sort-icon-marka">&#x25B2;&#x25BC;</span></th>
         <th onclick="sortTable(2)">Model <span class="sort-icon" id="sort-icon-model">&#x25B2;&#x25BC;</span></th>
-        <th onclick="sortTable(3)">Rozmiar <span class="sort-icon" id="sort-icon-rozmiar">&#x25B2;&#x25BC;</span></th>
-        <th onclick="sortTable(4)">Cena [zł] <span class="sort-icon" id="sort-icon-cena">&#x25B2;&#x25BC;</span></th>
+        <th onclick="sortTable(3)">Cena [zł] <span class="sort-icon" id="sort-icon-cena">&#x25B2;&#x25BC;</span></th>
         <th>Akcje</th>
     </tr>
     </thead>
@@ -49,7 +48,6 @@
         <td th:text="${but.id}"></td>
         <td th:text="${but.marka}"></td>
         <td th:text="${but.nazwaModelu}"></td>
-        <td th:text="${but.rozmiar}"></td>
         <td th:text="${but.cena}"></td>
         <td>
             <form th:action="@{/usunBut(id=${but.id})}" method="post">
@@ -68,8 +66,6 @@
     <input type="text" id="marka" name="marka"><br>
     <label for="nazwaModelu">Model:</label>
     <input type="text" id="nazwaModelu" name="nazwaModelu"><br>
-    <label for="rozmiar">Rozmiar:</label>
-    <input type="number" id="rozmiar" name="rozmiar"><br>
     <label for="cena">Cena:</label>
     <input type="number" id="cena" name="cena"><br>
     <button type="submit">Dodaj</button>
@@ -163,8 +159,7 @@
             case 0: return 'id';
             case 1: return 'marka';
             case 2: return 'model';
-            case 3: return 'rozmiar';
-            case 4: return 'cena';
+            case 3: return 'cena';
             default: return '';
         }
     }
