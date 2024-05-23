@@ -74,7 +74,11 @@
         <td th:text="${but.cena}"></td>
         <td>
             <form th:action="@{/dodajZamowienie(klient_id=${zalogowanyKlient.id}, but_id=${but.id})}" method="post">
-                <input type="text" name="rozmiar">
+                <label for="rozmiar">Wybierz rozmiar:</label>
+                <select id="rozmiar" name="rozmiar" required>
+                    <option value="" disabled selected>Wybierz rozmiar</option>
+                    <option th:each="rozmiar : ${but.rozmiary}" th:value="${rozmiar}" th:text="${rozmiar}"></option>
+                </select>
                 <button type="submit">Zamów</button>
             </form>
         </td>

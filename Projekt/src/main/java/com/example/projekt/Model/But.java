@@ -1,12 +1,11 @@
 package com.example.projekt.Model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 @Entity
 @Getter
@@ -18,12 +17,14 @@ public class But {
     private int id;
     private String marka;
     private String nazwaModelu;
-    //private double rozmiar;
     private double cena;
+    @ElementCollection
+    private List<Double> rozmiary;
 
-    public But(String marka, String nazwaModelu, double cena) {
+    public But(String marka, String nazwaModelu, double cena, List<Double> rozmiary) {
         this.marka = marka;
         this.nazwaModelu = nazwaModelu;
         this.cena = cena;
+        this.rozmiary = rozmiary;
     }
 }

@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @org.springframework.stereotype.Controller
 public class Controller {
@@ -23,6 +25,7 @@ public class Controller {
     private KlientRepository klientRepository;
     @Autowired
     private ZamowienieRepository zamowienieRepository;
+
     @GetMapping("/baza")
     public String zwrocButy(Model model) {
       List<But> butyLista = butRepository.findAll();
@@ -39,8 +42,9 @@ public class Controller {
 
     @PostMapping("/dodajBut")
     public String dodajBut(@RequestParam String marka, @RequestParam String nazwaModelu,
-                           @RequestParam double cena) {
-        butRepository.save(new But(marka, nazwaModelu, cena));
+                           @RequestParam double cena, @RequestParam String rozmiary) {
+
+        butRepository.save(new But(marka, nazwaModelu, cena, rozmiaryDoListy(rozmiary)));
         return "redirect:/baza";
     }
 
@@ -53,11 +57,13 @@ public class Controller {
 
     @PostMapping("/zapiszEdycjeButa")
     public String zapiszEdycjeButa(@RequestParam Integer id, @RequestParam String marka,
-                                   @RequestParam String nazwaModelu, @RequestParam double cena) {
+                                   @RequestParam String nazwaModelu, @RequestParam double cena,
+                                   @RequestParam String rozmiary) {
         But but = butRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Nieprawidłowe ID buta"));
         but.setMarka(marka);
         but.setNazwaModelu(nazwaModelu);
         but.setCena(cena);
+        but.setRozmiary(rozmiaryDoListy(rozmiary));
         butRepository.save(but);
         return "redirect:/baza";
     }
@@ -79,9 +85,7 @@ public class Controller {
                 throw (new IllegalArgumentException("Nieprawidłowy email"));
 
             else if (klient.getHaslo().equals(haslo)) {
-                model.addAttribute("zalogowanyKlient", klient);
-                List<Zamowienie> zamowienia = zamowienieRepository.ZnajdzPoKliencie(klient.getId());
-                model.addAttribute("zamowienia", zamowienia);
+                pobierzModel(model, klient);
                 return "stronaKlienta";
             } else
                 throw (new IllegalArgumentException("Nieprawidłowe hasło"));
@@ -98,17 +102,38 @@ public class Controller {
         klientRepository.save(klient);
         return "start";
     }
-    // Ta funkcja wylogowywuje użytkownika, ale nie wiem jak to zrobić inaczej (sory!)-- Maciek
+
     @PostMapping("/dodajZamowienie")
-    public String dodajZamowienie(@RequestParam int klient_id,@RequestParam int but_id, @RequestParam int rozmiar){
+    public String dodajZamowienie(@RequestParam int klient_id, @RequestParam int but_id, @RequestParam Double rozmiar,
+                                  Model model){
         Klient klient = klientRepository.findById(klient_id);
         But but = butRepository.findById(but_id);
         Zamowienie zam = new Zamowienie(klient, but, rozmiar);
         zamowienieRepository.save(zam);
-        return "redirect:";
+        pobierzModel(model, klient);
+        return "stronaKlienta";
     }
     @GetMapping("/wyloguj")
     public String wyloguj(){
         return "redirect:";
     }
+
+    private void pobierzModel(Model model, Klient klient) {
+        List<Zamowienie> zamowienia = zamowienieRepository.ZnajdzPoKliencie(klient.getId());
+        model.addAttribute("zalogowanyKlient", klient);
+        model.addAttribute("zamowienia", zamowienia);
+        List<But> butyLista = butRepository.findAll();
+        model.addAttribute("listaButow", butyLista);
+    }
+
+    private List<Double> rozmiaryDoListy(String rozmiary) {
+        return  Arrays.stream(rozmiary.trim()
+                        .split("\\s*,\\s*"))
+                        .map(Double::parseDouble)
+                        .sorted()
+                        .collect(Collectors.toList());
+
+
+    }
+
 }

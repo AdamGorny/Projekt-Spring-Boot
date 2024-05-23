@@ -19,8 +19,8 @@ public class Zamowienie {
     @ManyToOne
     @JoinColumn(name = "but_id")
     private But but;
-    private int rozmiar;
-    public Zamowienie(Klient klient, But but, int rozmiar){
+    private Double rozmiar;
+    public Zamowienie(Klient klient, But but, Double rozmiar){
         this.klient = klient;
         this.but = but;
         this.rozmiar = rozmiar;
