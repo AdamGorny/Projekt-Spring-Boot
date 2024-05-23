@@ -23,7 +23,6 @@ public class Controller {
     private KlientRepository klientRepository;
     @Autowired
     private ZamowienieRepository zamowienieRepository;
-
     @GetMapping("/baza")
     public String zwrocButy(Model model) {
       List<But> butyLista = butRepository.findAll();
@@ -112,5 +111,4 @@ public class Controller {
     public String wyloguj(){
         return "redirect:";
     }
-
 }
