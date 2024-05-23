@@ -25,10 +25,14 @@
             transform: translateY(-50%);
         }
     </style>
+    <title>Strona klienta</title>
 </head>
 <body>
 <h1>Zalogowano</h1>
 <p th:text="'Witaj ' + ${zalogowanyKlient.imie} + ' ' + ${zalogowanyKlient.nazwisko}"></p>
+<a th:href="@{/wyloguj}">
+    <button>Wyloguj się</button>
+</a>
 <a th:href="@{/baza}">
     <button>Wejdz do bazy danych</button>
 </a>
@@ -36,9 +40,10 @@
 <table id="tableZam">
     <thead>
     <tr>
-        <th onclick="sortTable(0)">Marka <span class="sort-icon" id="sort-icon-markaBut">&#x25B2;&#x25BC;</span></th>
-        <th onclick="sortTable(1)">Model <span class="sort-icon" id="sort-icon-modelBut">&#x25B2;&#x25BC;</span></th>
-        <th onclick="sortTable(2)">Rozmiar <span class="sort-icon" id="sort-icon-rozmiarBut">&#x25B2;&#x25BC;</span></th>
+        <th>Marka</th>
+        <th>Model</th>
+        <th>Rozmiar</th>
+        <th>Cena</th>
     </tr>
     </thead>
     <tbody>
@@ -46,8 +51,115 @@
         <td th:text="${zam.but.marka}"></td>
         <td th:text="${zam.but.nazwaModelu}"></td>
         <td th:text="${zam.rozmiar}"></td>
+        <td th:text="${zam.but.cena}"></td>
     </tr>
     </tbody>
 </table>
+<h2>Katalog butów</h2>
+<table id="table">
+    <thead>
+    <tr>
+        <th onclick="sortTable(0,1)">ID <span class="sort-icon" id="sort-icon-id">&#x25B2;&#x25BC;</span></th>
+        <th onclick="sortTable(1,1)">Marka <span class="sort-icon" id="sort-icon-marka">&#x25B2;&#x25BC;</span></th>
+        <th onclick="sortTable(2,1)">Model <span class="sort-icon" id="sort-icon-model">&#x25B2;&#x25BC;</span></th>
+        <th onclick="sortTable(3,1)">Cena [zł] <span class="sort-icon" id="sort-icon-cena">&#x25B2;&#x25BC;</span></th>
+        <th>Rozmiar</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="but : ${listaButow}">
+        <td th:text="${but.id}"></td>
+        <td th:text="${but.marka}"></td>
+        <td th:text="${but.nazwaModelu}"></td>
+        <td th:text="${but.cena}"></td>
+        <td>
+            <form th:action="@{/dodajZamowienie(klient_id=${zalogowanyKlient.id}, but_id=${but.id})}" method="post">
+                <input type="text" name="rozmiar">
+                <button type="submit">Zamów</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<script>
+    const sortDirections = [1, 1, 1, 1, 1];
+
+    function sortTable(columnIndex) {
+        let table, rows, switching, i, x, y, shouldSwitch;
+        table = document.getElementById("table");
+        switching = true;
+        while (switching) {
+            switching = false;
+            rows = table.rows;
+            for (i = 1; i < (rows.length - 1); i++) {
+                shouldSwitch = false;
+                x = rows[i].getElementsByTagName("td")[columnIndex];
+                y = rows[i + 1].getElementsByTagName("td")[columnIndex];
+                if (sortDirections[columnIndex] === 1) {
+                    if (isNaN(parseFloat(x.innerHTML))) {
+                        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                            shouldSwitch = true;
+                            break;
+                        }
+                    } else {
+                        if (parseFloat(x.innerHTML) > parseFloat(y.innerHTML)) {
+                            shouldSwitch = true;
+                            break;
+                        }
+                    }
+                } else {
+                    if (isNaN(parseFloat(x.innerHTML))) {
+                        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                            shouldSwitch = true;
+                            break;
+                        }
+                    } else {
+                        if (parseFloat(x.innerHTML) < parseFloat(y.innerHTML)) {
+                            shouldSwitch = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            if (shouldSwitch) {
+                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                switching = true;
+            }
+        }
+
+        sortDirections[columnIndex] *= -1;
+        updateSortIcon(columnIndex);
+    }
+
+    function updateSortIcon(columnIndex) {
+        const icons = document.querySelectorAll('.sort-icon');
+        icons.forEach(function(icon) {
+            icon.innerHTML = '&#x25B2;&#x25BC;';
+        });
+
+        const iconId = 'sort-icon-' + getColumnId(columnIndex);
+        const currentIcon = document.getElementById(iconId);
+        if (sortDirections[columnIndex] === -1) {
+            currentIcon.innerHTML = '&#x25B2;';
+        } else {
+            currentIcon.innerHTML = '&#x25BC;';
+        }
+    }
+
+    function getColumnId(columnIndex) {
+            switch (columnIndex) {
+                case 0:
+                    return 'id';
+                case 1:
+                    return 'marka';
+                case 2:
+                    return 'model';
+                case 3:
+                    return 'cena';
+                default:
+                    return '';
+            }
+    }
+</script>
 </body>
 </html>
