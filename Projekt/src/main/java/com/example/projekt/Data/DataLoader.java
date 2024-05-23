@@ -9,7 +9,6 @@ import com.example.projekt.Repository.ZamowienieRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Component
