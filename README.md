@@ -1,6 +1,10 @@
+(Adam) (23.05): Naprawiłem to wylogowywanie, ale prawidłowo powinno się gdzieś w sesji trzymać informacje o zalogowanym kliencie a najlepiej to zrobić jakąś dedykowaną biblioteką, bo w tym co teraz jest trzeba za każdym razem wysyłać wszystkie dane wczytując stronę klienta. Mimo wszystko zostawiłbym to tak jak jest, chyba że ktoś chce się pobawić.
+
+&#8595;&#8595;&#8595;
+--------------------------------------
 (Maciek) (22.05): Projekt jest już praktycznie gotowy! Są tylko dwie małe rzeczy, które przydałoby się poprawić (a których nie potrafiłem): 
   - sortowanie tabeli z zamówieniami (na stronie klienta)
-  - dodawanie zamówienia (na stronie klienta) wylogowywuje go (przydałoby się zaktualizować listę zamówień bez odświeżania strony, ale nie wiem jak to zrobić)
+  - ~~dodawanie zamówienia (na stronie klienta) wylogowywuje go (przydałoby się zaktualizować listę zamówień bez odświeżania strony, ale nie wiem jak to zrobić)~~
   - (OPCJONALNIE) dodać więcej rekordów do bazy użytkowników, butów, zamówień (jeśli ktoś z Was się nudzi)
 
 Poza tym wszystko jest ok, dobra robota!
