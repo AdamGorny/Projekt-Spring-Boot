@@ -15,9 +15,11 @@ public class But {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
     private String marka;
     private String nazwaModelu;
     private double cena;
+
     @ElementCollection
     private List<Double> rozmiary;
 

@@ -13,13 +13,17 @@ public class Zamowienie {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id_zam;
+
     @ManyToOne
     @JoinColumn(name = "klient_id")
     private Klient klient;
+
     @ManyToOne
     @JoinColumn(name = "but_id")
     private But but;
+
     private Double rozmiar;
+
     public Zamowienie(Klient klient, But but, Double rozmiar){
         this.klient = klient;
         this.but = but;

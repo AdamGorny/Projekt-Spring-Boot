@@ -1,7 +1,5 @@
 <!DOCTYPE html>
-<html lang="en"
-    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-    layout:decoration="_layout">
+<html lang="en">
 <head>
     <style>
         table {
@@ -28,22 +26,22 @@
     <title>Strona klienta</title>
 </head>
 <body>
+
 <h1>Zalogowano</h1>
 <p th:text="'Witaj ' + ${zalogowanyKlient.imie} + ' ' + ${zalogowanyKlient.nazwisko}"></p>
+
 <a th:href="@{/wyloguj}">
     <button>Wyloguj się</button>
 </a>
-<a th:href="@{/baza}">
-    <button>Wejdz do bazy danych</button>
-</a>
+
 <h2>Twoje zamówienia</h2>
 <table id="tableZam">
     <thead>
     <tr>
-        <th>Marka</th>
-        <th>Model</th>
-        <th>Rozmiar</th>
-        <th>Cena</th>
+        <th onclick="sortTable(0, 'tableZam')">Marka <span class="sort-icon" id="sort-icon-zam-marka">&#x25B2;&#x25BC;</span></th>
+        <th onclick="sortTable(1, 'tableZam')">Model <span class="sort-icon" id="sort-icon-zam-model">&#x25B2;&#x25BC;</span></th>
+        <th onclick="sortTable(2, 'tableZam')">Rozmiar <span class="sort-icon" id="sort-icon-zam-rozmiar">&#x25B2;&#x25BC;</span></th>
+        <th onclick="sortTable(3, 'tableZam')">Cena [zł] <span class="sort-icon" id="sort-icon-zam-cena">&#x25B2;&#x25BC;</span></th>
     </tr>
     </thead>
     <tbody>
@@ -51,30 +49,32 @@
         <td th:text="${zam.but.marka}"></td>
         <td th:text="${zam.but.nazwaModelu}"></td>
         <td th:text="${zam.rozmiar}"></td>
-        <td th:text="${zam.but.cena}"></td>
+        <td th:text="${#numbers.formatDecimal(zam.but.cena, 1, 2, 'POINT')}"></td>
     </tr>
     </tbody>
 </table>
+
 <h2>Katalog butów</h2>
+<label for="szukaj"></label>
+<input type="text" id="szukaj" placeholder="Wyszukaj but..." oninput="searchCatalog()">
+
 <table id="table">
     <thead>
     <tr>
-        <th onclick="sortTable(0,1)">ID <span class="sort-icon" id="sort-icon-id">&#x25B2;&#x25BC;</span></th>
-        <th onclick="sortTable(1,1)">Marka <span class="sort-icon" id="sort-icon-marka">&#x25B2;&#x25BC;</span></th>
-        <th onclick="sortTable(2,1)">Model <span class="sort-icon" id="sort-icon-model">&#x25B2;&#x25BC;</span></th>
-        <th onclick="sortTable(3,1)">Cena [zł] <span class="sort-icon" id="sort-icon-cena">&#x25B2;&#x25BC;</span></th>
-        <th>Rozmiar</th>
+        <th onclick="sortTable(0, 'table')">Marka <span class="sort-icon" id="sort-icon-marka">&#x25B2;&#x25BC;</span></th>
+        <th onclick="sortTable(1, 'table')">Model <span class="sort-icon" id="sort-icon-model">&#x25B2;&#x25BC;</span></th>
+        <th onclick="sortTable(2, 'table')">Cena [zł] <span class="sort-icon" id="sort-icon-cena">&#x25B2;&#x25BC;</span></th>
+        <th style="cursor: default;">Rozmiar</th>
     </tr>
     </thead>
     <tbody>
-    <tr th:each="but : ${listaButow}">
-        <td th:text="${but.id}"></td>
+    <tr th:each="but : ${listaButow}" th:data-id="${but.id}">
         <td th:text="${but.marka}"></td>
         <td th:text="${but.nazwaModelu}"></td>
-        <td th:text="${but.cena}"></td>
+        <td th:text="${#numbers.formatDecimal(but.cena, 1, 2, 'POINT')}"></td>
         <td>
             <form th:action="@{/dodajZamowienie(klient_id=${zalogowanyKlient.id}, but_id=${but.id})}" method="post">
-                <label for="rozmiar">Wybierz rozmiar:</label>
+                <label for="rozmiar"></label>
                 <select id="rozmiar" name="rozmiar" required>
                     <option value="" disabled selected>Wybierz rozmiar</option>
                     <option th:each="rozmiar : ${but.rozmiary}" th:value="${rozmiar}" th:text="${rozmiar}"></option>
@@ -85,12 +85,43 @@
     </tr>
     </tbody>
 </table>
-<script>
-    const sortDirections = [1, 1, 1, 1, 1];
 
-    function sortTable(columnIndex) {
+
+<!-- WYSZUKIWANIE PO WSZYSTKICH POLACH W KATALOGU -->
+<script>
+    function searchCatalog() {
+        const searchText = document.getElementById("szukaj").value.trim().toLowerCase();
+        const rows = document.querySelectorAll("#table tbody tr");
+
+        rows.forEach(function(row) {
+            const cells = row.querySelectorAll("td:nth-child(-n+3)");
+            let rowContainsText = false;
+            if (searchText === "") {
+                row.style.display = "";
+            } else {
+                cells.forEach(function(cell) {
+                    const cellText = cell.textContent.trim().toLowerCase();
+                    if (cellText.includes(searchText)) {
+                        rowContainsText = true;
+                    }
+                });
+
+                row.style.display = rowContainsText ? "" : "none";
+            }
+        });
+    }
+</script>
+
+<!-- SORTOWANIE TABLELI I STRZAŁKI KIERUNKU SORTOWANIA -->
+<script>
+    const sortDirections = {
+        'table': [1, 1, 1],
+        'tableZam': [1, 1, 1, 1]
+    };
+
+    function sortTable(columnIndex, tableId) {
         let table, rows, switching, i, x, y, shouldSwitch;
-        table = document.getElementById("table");
+        table = document.getElementById(tableId);
         switching = true;
         while (switching) {
             switching = false;
@@ -99,7 +130,7 @@
                 shouldSwitch = false;
                 x = rows[i].getElementsByTagName("td")[columnIndex];
                 y = rows[i + 1].getElementsByTagName("td")[columnIndex];
-                if (sortDirections[columnIndex] === 1) {
+                if (sortDirections[tableId][columnIndex] === 1) {
                     if (isNaN(parseFloat(x.innerHTML))) {
                         if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
                             shouldSwitch = true;
@@ -131,38 +162,51 @@
             }
         }
 
-        sortDirections[columnIndex] *= -1;
-        updateSortIcon(columnIndex);
+        sortDirections[tableId][columnIndex] *= -1;
+        updateSortIcon(columnIndex, tableId);
     }
 
-    function updateSortIcon(columnIndex) {
-        const icons = document.querySelectorAll('.sort-icon');
+    function updateSortIcon(columnIndex, tableId) {
+        const icons = document.querySelectorAll(`#${tableId} .sort-icon`);
         icons.forEach(function(icon) {
             icon.innerHTML = '&#x25B2;&#x25BC;';
         });
 
-        const iconId = 'sort-icon-' + getColumnId(columnIndex);
+        const iconId = 'sort-icon-' + getColumnId(columnIndex, tableId);
         const currentIcon = document.getElementById(iconId);
-        if (sortDirections[columnIndex] === -1) {
+        if (sortDirections[tableId][columnIndex] === -1) {
             currentIcon.innerHTML = '&#x25B2;';
         } else {
             currentIcon.innerHTML = '&#x25BC;';
         }
     }
 
-    function getColumnId(columnIndex) {
+    function getColumnId(columnIndex, tableId) {
+        if (tableId === 'tableZam') {
             switch (columnIndex) {
                 case 0:
-                    return 'id';
+                    return 'zam-marka';
                 case 1:
-                    return 'marka';
+                    return 'zam-model';
                 case 2:
-                    return 'model';
+                    return 'zam-rozmiar';
                 case 3:
+                    return 'zam-cena';
+                default:
+                    return '';
+            }
+        } else {
+            switch (columnIndex) {
+                case 0:
+                    return 'marka';
+                case 1:
+                    return 'model';
+                case 2:
                     return 'cena';
                 default:
                     return '';
             }
+        }
     }
 </script>
 </body>

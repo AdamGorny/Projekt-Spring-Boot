@@ -6,12 +6,10 @@ import com.example.projekt.Model.Zamowienie;
 import com.example.projekt.Repository.ButRepository;
 import com.example.projekt.Repository.KlientRepository;
 import com.example.projekt.Repository.ZamowienieRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Arrays;
 import java.util.List;
@@ -19,12 +17,15 @@ import java.util.stream.Collectors;
 
 @org.springframework.stereotype.Controller
 public class Controller {
-    @Autowired
-    private ButRepository butRepository;
-    @Autowired
-    private KlientRepository klientRepository;
-    @Autowired
-    private ZamowienieRepository zamowienieRepository;
+    private final ButRepository butRepository;
+    private final KlientRepository klientRepository;
+    private final ZamowienieRepository zamowienieRepository;
+
+    public Controller(ButRepository butRepository, KlientRepository klientRepository, ZamowienieRepository zamowienieRepository) {
+        this.butRepository = butRepository;
+        this.klientRepository = klientRepository;
+        this.zamowienieRepository = zamowienieRepository;
+    }
 
     @GetMapping("/baza")
     public String zwrocButy(Model model) {
@@ -122,6 +123,7 @@ public class Controller {
         List<Zamowienie> zamowienia = zamowienieRepository.ZnajdzPoKliencie(klient.getId());
         model.addAttribute("zalogowanyKlient", klient);
         model.addAttribute("zamowienia", zamowienia);
+
         List<But> butyLista = butRepository.findAll();
         model.addAttribute("listaButow", butyLista);
     }
@@ -132,8 +134,6 @@ public class Controller {
                         .map(Double::parseDouble)
                         .sorted()
                         .collect(Collectors.toList());
-
-
     }
 
 }

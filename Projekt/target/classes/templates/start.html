@@ -1,7 +1,5 @@
 <!DOCTYPE html>
-<html lang="en"
-    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-    layout:decoration="_layout">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Zaloguj się</title>
@@ -9,11 +7,12 @@
 <body>
 <h1>Witaj!</h1>
 <h3>Zaloguj się lub utwórz konto</h3>
+
 <form th:action="@{/logowanie}" method="post">
     <label for="email">Adres e-mail:</label>
-    <input type="text" id="email" name="email"><br>
+    <input type="text" id="email" name="email" required><br>
     <label for="haslo">Hasło:</label>
-    <input type="password" id="haslo" name="haslo"><br>
+    <input type="password" id="haslo" name="haslo" required><br>
     <button type="submit">Zaloguj</button>
 </form>
 <a th:href="@{/utworzKonto}">

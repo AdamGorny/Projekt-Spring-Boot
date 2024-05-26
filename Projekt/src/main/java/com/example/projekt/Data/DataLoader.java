@@ -23,7 +23,7 @@ public class DataLoader implements CommandLineRunner {
         this.zamowienieRepository = zamowienieRepository;
     }
 
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         But but1 = new But("Nike", "Air Force 1", 700, List.of(45.,42.5,43.));
         butRepository.save(but1);
         But but2 = new But("Nike", "Air Jordan 4", 1000, List.of(39.5,40.,40.5));

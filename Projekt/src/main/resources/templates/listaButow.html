@@ -32,7 +32,7 @@
     <button>Wyloguj</button>
 </a>
 
-<!-- WYŚWIETLANIE TABELI Z BUTAMI -->
+<!-- WYŚWIETLANIE TABELI Z BUTAMI + POLE WYSZUKIWANIA -->
 <h2>Lista Butów</h2>
 
 <label for="szukaj"></label>
@@ -46,7 +46,7 @@
         <th onclick="sortTable(2)">Model <span class="sort-icon" id="sort-icon-model">&#x25B2;&#x25BC;</span></th>
         <th onclick="sortTable(3)">Cena [zł] <span class="sort-icon" id="sort-icon-cena">&#x25B2;&#x25BC;</span></th>
         <th onclick="sortTable(4)">Rozmiary <span class="sort-icon" id="sort-icon-rozmiary">&#x25B2;&#x25BC;</span></th>
-        <th>Akcje</th>
+        <th style="cursor: default;">Akcje</th>
     </tr>
     </thead>
     <tbody>
@@ -54,7 +54,7 @@
         <td th:text="${but.id}"></td>
         <td th:text="${but.marka}"></td>
         <td th:text="${but.nazwaModelu}"></td>
-        <td th:text="${but.cena}"></td>
+        <td th:text="${#numbers.formatDecimal(but.cena, 1, 2, 'POINT')}"></td>
         <td th:text="${#strings.arrayJoin(but.rozmiary.toArray(), ', ')}" data-rozmiary="${but.rozmiary.length}"></td>
         <td>
             <form th:action="@{/usunBut(id=${but.id})}" method="post">
@@ -82,22 +82,39 @@
     <button type="submit">Dodaj</button>
 </form>
 
-<!-- WYSZUKIWANIE -->
+<!-- WYSZUKIWANIE PO WSZYSTKICH POLACH -->
 <script>
     document.getElementById("szukaj").addEventListener("input", function() {
-        const searchText = this.value.toLowerCase();
+        const searchText = this.value.trim().toLowerCase();
         const rows = document.querySelectorAll("#table tbody tr");
 
         rows.forEach(function(row) {
-            const text = row.textContent.toLowerCase();
-            if (text.includes(searchText)) {
+            const cells = row.getElementsByTagName("td");
+            let rowContainsText = false;
+            if (searchText === "") {
                 row.style.display = "";
             } else {
-                row.style.display = "none";
+                for (let i = 0; i < cells.length - 1; i++) {
+                    const cellText = cells[i].textContent.trim().toLowerCase();
+                    if (i === cells.length - 2) {
+                        const rozmiary = cellText.split(", ");
+                        if (rozmiary.includes(searchText)) {
+                            rowContainsText = true;
+                            break;
+                        }
+                    } else {
+                        if (cellText === searchText || cellText.startsWith(searchText + " ") || cellText.includes(" " + searchText + " ")) {
+                            rowContainsText = true;
+                            break;
+                        }
+                    }
+                }
+                row.style.display = rowContainsText ? "" : "none";
             }
         });
     });
 </script>
+
 
 <!-- SORTOWANIE TABLELI I STRZAŁKI KIERUNKU SORTOWANIA -->
 <script>
@@ -114,6 +131,8 @@
                 shouldSwitch = false;
                 x = rows[i].getElementsByTagName("td")[columnIndex];
                 y = rows[i + 1].getElementsByTagName("td")[columnIndex];
+
+                <!-- SORTOWANIE PO ILOŚCI ROZMIARÓW -->
                 if (columnIndex === 4) {
                     if (sortDirections[columnIndex] === 1) {
                         if (x.innerHTML.split(", ").length > y.innerHTML.split(", ").length) {

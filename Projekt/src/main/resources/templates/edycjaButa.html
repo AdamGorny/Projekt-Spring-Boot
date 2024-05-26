@@ -38,6 +38,7 @@
     </style>
 </head>
 <body>
+
 <h2>Edytuj Buta</h2>
 <form th:action="@{/zapiszEdycjeButa}" method="post">
     <input type="hidden" th:name="id" th:value="${but.id}">
@@ -54,5 +55,6 @@
     <button type="submit" class="save">Zapisz zmiany</button>
     <a href="/" class="cancel"><button type="button" class="cancel">Anuluj</button></a>
 </form>
+
 </body>
 </html>
